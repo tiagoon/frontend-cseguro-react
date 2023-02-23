@@ -1,0 +1,24 @@
+body {
+  background: linear-gradient(0deg, rgba(61, 60, 61, 0.2), rgba(61, 60, 61, 0.2)), url('../images/bg-company.jpg') no-repeat;
+  background-size: cover;
+}
+
+.block-content {
+  background: #f0f1f3;
+  padding: 30px;
+  width: 100%;
+  max-width: 960px;
+  margin: 100px auto
+}
+
+.button-small {
+  padding: 2px 4px;
+}
+
+.button-delete {
+  cursor: pointer;
+}
+
+.modal-footer {
+  justify-content: flex-start;
+}
