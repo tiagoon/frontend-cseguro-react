@@ -163,7 +163,7 @@ function Home() {
                           <tbody>
                             {users.map((user) => {
                                 return (
-                                  <tr>
+                                  <tr key={user.id.toString()}>
                                     <td>{ user.name }</td>
                                     <td>{ user.email }</td>
                                     <td>{ user.phone }</td>

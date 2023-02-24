@@ -17,7 +17,10 @@ function ModalUserCreate(props) {
          birthday: userBirthday,
          city_name: userCityName
       };
-      props.userCreate(data)
+
+      if (userName.length > 0 || userEmail.length > 0) {
+         props.userCreate(data)
+      }
    }
 
    return (
@@ -35,14 +38,18 @@ function ModalUserCreate(props) {
                      <input 
                         onChange={(e) => setUserName(e.target.value)}
                         type="text" 
-                        className="form-control" />
+                        className="form-control"
+                        required />
+                     <label className="text-secondary">Obrigatório</label> 
                   </div>
                   <div className="mb-3">
                      <label className="form-label">Email</label>
                      <input 
                         onChange={(e) => setUserEmail(e.target.value)}
                         type="email" 
-                        className="form-control" />
+                        className="form-control" 
+                        required />
+                     <label className="text-secondary">Obrigatório</label> 
                   </div>
                   <div className="row">
                      <div className="col-md-6 mb-3">

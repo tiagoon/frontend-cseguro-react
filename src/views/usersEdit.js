@@ -15,6 +15,7 @@ function UsersEdit() {
    useDocumentTitle("Editar usuário");
    
    const { id } = useParams();
+   
    const [user, setUser] = useState({});
    const [userCompanies, setUserCompanies] = useState([]);
    const [listCompanies, setListCompanies] = useState([]);
@@ -57,7 +58,7 @@ function UsersEdit() {
       await api.post(`/userCompanies`, data)
       .then(response => {
         setIsLoaded(true);
-        window.location.href = `/users/${response.data.id}/edit`;
+        window.location.href = `/users/${id}/edit`;
       })
       .catch(error => {
         console.log(error)
