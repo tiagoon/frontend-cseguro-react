@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 // Elements
 import logo from '../assets/images/logo.png';
@@ -16,8 +16,6 @@ import api from "../services/api";
 function Home() {
   
   useDocumentTitle("Início");
-  
-  const navigate = useNavigate();
 
   const [users, setUsers] = useState([]);
   const [hasError, setError] = useState(null);
@@ -73,7 +71,7 @@ function Home() {
       .then(response => {
         setUsers(response.data);
         setIsLoaded(true);
-        navigate(`/`)
+        window.location.reload();
       })
       .catch(error => {
         console.log(error)
@@ -91,7 +89,7 @@ function Home() {
     await api.post(`/users`, data)
       .then(response => {
         setIsLoaded(true);
-        navigate(`/users/${response.data.id}/edit`)
+        window.location.href = `/users/${response.data.id}/edit`;
       })
       .catch(error => {
         console.log(error)

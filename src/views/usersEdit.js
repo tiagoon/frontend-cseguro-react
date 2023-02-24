@@ -16,12 +16,11 @@ function UsersEdit() {
    
    const { id } = useParams();
    const [user, setUser] = useState({});
-   const [userCompanies, setUserCompanies] = useState({});
+   const [userCompanies, setUserCompanies] = useState([]);
    const [hasError, setError] = useState(null);
    const [isLoaded, setIsLoaded] = useState(false);
 
    useEffect(() => {
-      //fetch user data
       api.get(`/users/${id}`)
         .then(response => {
           setUser(response.data);
@@ -36,23 +35,38 @@ function UsersEdit() {
             setError(error.message);
           }
         })
-
-      // fetch companies
-      api.get(`/userCompanies/${id}`)
-        .then(response => {
-          setUserCompanies(response.data);
-          setIsLoaded(true);
-        })
-        .catch(error => {
-          console.log(error)
-          setIsLoaded(true);
-          if (error.response.data != null) {
-            setError(error.response.data.message);
-          } else {
-            setError(error.message);
-          }
-        })
    }, []);
+
+   useEffect(() => {
+      api.get(`/userCompanies/${id}`)
+         .then(response => {
+            setUserCompanies(response.data);
+            setIsLoaded(true);
+         })
+         .catch(error => {
+            console.log(error)
+         })
+
+      console.log(typeof userCompanies);
+   }, []);
+
+   async function userCompanyCreate(data) {
+      setIsLoaded(null);
+      await api.post(`/userCompanies`, data)
+      .then(response => {
+        setIsLoaded(true);
+        window.location.href = `/users/${response.data.id}/edit`;
+      })
+      .catch(error => {
+        console.log(error)
+        setIsLoaded(true);
+        if (error.response.data != null) {
+            setError(error.response.data.message);
+        } else {
+            setError(error.message);
+        }
+      })
+   }
 
    return (
       <div className="container">
@@ -105,35 +119,42 @@ function UsersEdit() {
                   <h5 className="fw-bolder text-center">Empresas vinculadas a este usuário</h5>
                </div>
                
-               <div className="row mt-5">
-                  <div className="table-responsive">
-                     <table className="table">
-                     <thead>
-                           <tr>
-                              <th>Nome</th>
-                              <th>CNPJ</th>
-                              <th>Endereço</th>
-                              <th></th>
-                           </tr>
-                     </thead>
-                     <tbody>
-                           <tr>
-                              <td> company.company_name </td>
-                              <td> company.document </td>
-                              <td> company.address </td>
-                              <td>
-                                 <span 
-                                 className="btn button-small btn-dark button-delete"
-                                 data-bs-toggle="modal" data-bs-target="#modalUserDelete">
-                                 <img src={deleteIcon} alt="" /></span>
-                              </td>
-                           </tr>
-                        
-                     </tbody>
-                     </table>
-                  </div>
-               </div>
-
+               { (!userCompanies) 
+                  ? <div className="text-center my-5">Usuários sem vínculos</div> 
+                  :  <div className="row mt-5">
+                        <div className="table-responsive">
+                           <table className="table">
+                           <thead>
+                                 <tr>
+                                    <th>Nome</th>
+                                    <th>CNPJ</th>
+                                    <th>Endereço</th>
+                                    <th></th>
+                                 </tr>
+                           </thead>
+                           <tbody>
+                              {userCompanies.map((company) => {
+                                 return (
+                                 <tr>
+                                    <td>{ company.company_name }</td>
+                                    <td>{ company.document }</td>
+                                    <td>{ company.address }</td>
+                                    <td>
+                                       <span 
+                                       className="btn button-small btn-dark button-delete"
+                                       data-bs-toggle="modal" data-bs-target="#modalUserDelete">
+                                       <img src={deleteIcon} alt="" /></span>
+                                    </td>
+                                 </tr>
+                                 );
+                              })
+                              }
+                           </tbody>
+                           </table>
+                        </div>
+                     </div>
+               }
+               
                <div className="mt-2">
                   <button 
                      className="btn btn-dark" 
@@ -148,8 +169,10 @@ function UsersEdit() {
                </div>
          </div>
       </div>
-      <ModalAddUserToCompany />
-      <ModalRemoveUserToCompany name="Tiago" id="83" />
+      <ModalAddUserToCompany userId="1" companies={[]} />
+      <ModalRemoveUserToCompany 
+         userId="1" 
+         userCompanyCreate={userCompanyCreate} />
     </div>  
   );
 }

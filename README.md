@@ -2,37 +2,41 @@
 
 CRUD utilizando React.
 
+#
 ## Packages usados
 - axios
 - react-router-dom
 
-## Available Scripts
+#
+## Como utilizar
 
 Para testar o projeto, execute os seguintes comandos:
 
-### `npm start`
+Instale as dependências
 
-Para rodar em localhost.\
-Abra [http://localhost:3000](http://localhost:3000) para ver no seu navegador.
+```shell
+npm install
+```
 
-### `npm test`
+Inicie o servidor em localhost
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```shell
+npm start
+```
 
-### `npm run build`
+Abra a página no navegador
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+[http://localhost:3000](http://localhost:3000)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+#
+## Testes 
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+`npm test`
 
-### `npm run eject`
+#
+## Build
+`npm run build`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
+#
+## Observações
+- Não foi possível implementar a tempo o CRUD de empresas. No entanto, o endpoint `companies` está pronto e documentado.
