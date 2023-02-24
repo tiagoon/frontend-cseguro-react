@@ -17,6 +17,7 @@ function UsersEdit() {
    const { id } = useParams();
    const [user, setUser] = useState({});
    const [userCompanies, setUserCompanies] = useState([]);
+   const [listCompanies, setListCompanies] = useState([]);
    const [hasError, setError] = useState(null);
    const [isLoaded, setIsLoaded] = useState(false);
 
@@ -50,6 +51,7 @@ function UsersEdit() {
       console.log(typeof userCompanies);
    }, []);
 
+   //Create
    async function userCompanyCreate(data) {
       setIsLoaded(null);
       await api.post(`/userCompanies`, data)
@@ -67,6 +69,41 @@ function UsersEdit() {
         }
       })
    }
+
+   //Delete userCompany
+   async function userCompanyRemove(data) {
+      setIsLoaded(null);
+      await api.delete(`/userCompanies/${id}`)
+      .then(() => {
+        setIsLoaded(true);
+       // window.location.reload();
+      })
+      .catch(error => {
+        console.log(error)
+        setIsLoaded(true);
+        if (error.response.data != null) {
+            setError(error.response.data.message);
+        } else {
+            setError(error.message);
+        }
+      })
+   }
+
+   //Lista all companies
+   useEffect(() => {
+      setIsLoaded(null);
+      api.get(`/companies`)
+         .then(response => {
+            setListCompanies(response.data);
+            setIsLoaded(true);
+         })
+         .catch(error => {
+            console.log(error)
+            setIsLoaded(true);
+         })
+
+      console.log(typeof listCompanies);
+   }, []);
 
    return (
       <div className="container">
@@ -135,7 +172,7 @@ function UsersEdit() {
                            <tbody>
                               {userCompanies.map((company) => {
                                  return (
-                                 <tr>
+                                 <tr key={company.id.toString()}>
                                     <td>{ company.company_name }</td>
                                     <td>{ company.document }</td>
                                     <td>{ company.address }</td>
@@ -169,10 +206,14 @@ function UsersEdit() {
                </div>
          </div>
       </div>
-      <ModalAddUserToCompany userId="1" companies={[]} />
-      <ModalRemoveUserToCompany 
-         userId="1" 
+      <ModalAddUserToCompany 
+         userId={id} 
+         companies={listCompanies} 
          userCompanyCreate={userCompanyCreate} />
+
+      <ModalRemoveUserToCompany 
+         userId={id}
+         userCompanyRemove={userCompanyRemove}/>
     </div>  
   );
 }
