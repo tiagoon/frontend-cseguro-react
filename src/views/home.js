@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import dayjs from 'dayjs';
 
 // Elements
 import logo from '../assets/images/logo.png';
@@ -20,7 +21,7 @@ function Home() {
   const [users, setUsers] = useState([]);
   const [hasError, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
-
+  
   useEffect(() => {
     api.get('/users')
       .then(response => {
@@ -167,7 +168,7 @@ function Home() {
                                     <td>{ user.name }</td>
                                     <td>{ user.email }</td>
                                     <td>{ user.phone }</td>
-                                    <td>{ user.birthday }</td>
+                                    <td>{ dayjs(user.birthday).format("DD/MM/YYYY") }</td>
                                     <td>{ user.city_name }</td>
                                     <td>
                                       <Link to={`/users/${user.id}/edit`} className="btn button-small btn-dark me-2">

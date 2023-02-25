@@ -1,6 +1,7 @@
 body {
   background: linear-gradient(0deg, rgba(61, 60, 61, 0.2), rgba(61, 60, 61, 0.2)), url('../images/bg-company.jpg') no-repeat;
   background-size: cover;
+  background-attachment: fixed;
 }
 
 .block-content {
@@ -13,6 +14,7 @@ body {
 
 .button-small {
   padding: 2px 4px;
+  margin: 2px 0;
 }
 
 .button-delete {

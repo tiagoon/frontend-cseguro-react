@@ -8,7 +8,7 @@ function ModalRemoveUserToCompany(props) {
                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body">
-               <p>Confirma a exclusão do usuário {props.company_name} (ID {props.id})?</p>
+               <p>Confirma a exclusão do relacionamento com esta empresa?</p>
             </div>
             <div className="modal-footer">
                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 // Elements
@@ -21,7 +21,9 @@ function UsersEdit() {
    const [listCompanies, setListCompanies] = useState([]);
    const [hasError, setError] = useState(null);
    const [isLoaded, setIsLoaded] = useState(false);
+   const relationshipId =  useRef(0);
 
+   //SHOW USER ON LOAD
    useEffect(() => {
       api.get(`/users/${id}`)
         .then(response => {
@@ -39,20 +41,7 @@ function UsersEdit() {
         })
    }, []);
 
-   useEffect(() => {
-      api.get(`/userCompanies/${id}`)
-         .then(response => {
-            setUserCompanies(response.data);
-            setIsLoaded(true);
-         })
-         .catch(error => {
-            console.log(error)
-         })
-
-      console.log(typeof userCompanies);
-   }, []);
-
-   //Create
+   //CREATE RELATIONSHIP
    async function userCompanyCreate(data) {
       setIsLoaded(null);
       await api.post(`/userCompanies`, data)
@@ -71,10 +60,11 @@ function UsersEdit() {
       })
    }
 
-   //Delete userCompany
-   async function userCompanyRemove(data) {
+   //DELETE RETATIONSHIP
+   async function userCompanyRemove() {
       setIsLoaded(null);
-      await api.delete(`/userCompanies/${id}`)
+      let relationId = relationshipId.current.attributes[0].value;
+      await api.delete(`/userCompanies/${relationId}`)
       .then(() => {
         setIsLoaded(true);
        // window.location.reload();
@@ -90,7 +80,7 @@ function UsersEdit() {
       })
    }
 
-   //Lista all companies
+   //LIST ALL COMPANIES
    useEffect(() => {
       setIsLoaded(null);
       api.get(`/companies`)
@@ -104,6 +94,19 @@ function UsersEdit() {
          })
 
       console.log(typeof listCompanies);
+   }, []);
+
+
+   //LIST USER COMPANIES
+   useEffect(() => {
+      api.get(`/userCompanies/${id}`)
+         .then(response => {
+            setUserCompanies(response.data);
+            setIsLoaded(true);
+         })
+         .catch(error => {
+            console.log(error)
+         })
    }, []);
 
    return (
@@ -157,9 +160,8 @@ function UsersEdit() {
                   <h5 className="fw-bolder text-center">Empresas vinculadas a este usuário</h5>
                </div>
                
-               { (!userCompanies) 
-                  ? <div className="text-center my-5">Usuários sem vínculos</div> 
-                  :  <div className="row mt-5">
+               { (userCompanies) 
+                  ?  <div className="row mt-5">
                         <div className="table-responsive">
                            <table className="table">
                            <thead>
@@ -179,6 +181,9 @@ function UsersEdit() {
                                     <td>{ company.address }</td>
                                     <td>
                                        <span 
+                                       onClick={userCompanyRemove}
+                                       ref={relationshipId}
+                                       data-id={company.id}
                                        className="btn button-small btn-dark button-delete"
                                        data-bs-toggle="modal" data-bs-target="#modalUserDelete">
                                        <img src={deleteIcon} alt="" /></span>
@@ -191,6 +196,7 @@ function UsersEdit() {
                            </table>
                         </div>
                      </div>
+                  : ''
                }
                
                <div className="mt-2">
@@ -209,12 +215,10 @@ function UsersEdit() {
       </div>
       <ModalAddUserToCompany 
          userId={id} 
-         companies={listCompanies} 
+         companies={listCompanies}
          userCompanyCreate={userCompanyCreate} />
 
-      <ModalRemoveUserToCompany 
-         userId={id}
-         userCompanyRemove={userCompanyRemove}/>
+      <ModalRemoveUserToCompany userCompanyRemove={userCompanyRemove}/>
     </div>  
   );
 }

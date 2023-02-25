@@ -6,6 +6,7 @@ CRUD utilizando React.
 ## Packages usados
 - axios
 - react-router-dom
+- dayjs
 
 #
 ## Como utilizar
