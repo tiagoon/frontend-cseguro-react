@@ -20,6 +20,11 @@ Instale as dependências
 npm install
 ```
 
+Crie o arquivo .env
+```sh
+cp .env.example .env
+```
+
 Inicie o servidor em localhost
 
 ```shell
