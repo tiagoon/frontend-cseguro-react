@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 // Elements
 import logo from '../assets/images/logo.png';
@@ -19,9 +20,8 @@ function UsersEdit() {
    const [user, setUser] = useState({});
    const [userCompanies, setUserCompanies] = useState([]);
    const [listCompanies, setListCompanies] = useState([]);
-   const [hasError, setError] = useState(null);
    const [isLoaded, setIsLoaded] = useState(false);
-   const relationshipId =  useRef(0);
+   const [relationshipDelete, setRelationshipDelete] = useState('');
 
    //SHOW USER ON LOAD
    useEffect(() => {
@@ -34,9 +34,9 @@ function UsersEdit() {
           console.log(error)
           setIsLoaded(true);
           if (error.response.data != null) {
-            setError(error.response.data.message);
+            toast.error(error.response.data.message);
           } else {
-            setError(error.message);
+            toast.error(error.message);
           }
         })
    }, []);
@@ -45,38 +45,37 @@ function UsersEdit() {
    async function userCompanyCreate(data) {
       setIsLoaded(null);
       await api.post(`/userCompanies`, data)
-      .then(response => {
+      .then(() => {
         setIsLoaded(true);
         window.location.href = `/users/${id}/edit`;
       })
       .catch(error => {
-        console.log(error)
-        setIsLoaded(true);
-        if (error.response.data != null) {
-            setError(error.response.data.message);
-        } else {
-            setError(error.message);
-        }
+         console.log(error)
+         setIsLoaded(true);
+         if (error.response.data != null) {
+            toast.error(error.response.data.message);
+         } else {
+            toast.error(error.message);
+         }
       })
    }
 
    //DELETE RETATIONSHIP
    async function userCompanyRemove() {
       setIsLoaded(null);
-      let relationId = relationshipId.current.attributes[0].value;
-      await api.delete(`/userCompanies/${relationId}`)
+      await api.delete(`/userCompanies/${relationshipDelete}`)
       .then(() => {
         setIsLoaded(true);
-       // window.location.reload();
+        window.location.reload();
       })
       .catch(error => {
-        console.log(error)
-        setIsLoaded(true);
-        if (error.response.data != null) {
-            setError(error.response.data.message);
-        } else {
-            setError(error.message);
-        }
+         console.log(error)
+         setIsLoaded(true);
+         if (error.response.data != null) {
+            toast.error(error.response.data.message);
+         } else {
+            toast.error(error.message);
+         }
       })
    }
 
@@ -181,9 +180,7 @@ function UsersEdit() {
                                     <td>{ company.address }</td>
                                     <td>
                                        <span 
-                                       onClick={userCompanyRemove}
-                                       ref={relationshipId}
-                                       data-id={company.id}
+                                       onClick={() => setRelationshipDelete(company.id)}
                                        className="btn button-small btn-dark button-delete"
                                        data-bs-toggle="modal" data-bs-target="#modalUserDelete">
                                        <img src={deleteIcon} alt="" /></span>

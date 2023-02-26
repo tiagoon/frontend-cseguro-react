@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
+import toast, { Toaster } from 'react-hot-toast';
 
 // Elements
 import logo from '../assets/images/logo.png';
@@ -19,7 +20,6 @@ function Home() {
   useDocumentTitle("Início");
 
   const [users, setUsers] = useState([]);
-  const [hasError, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   
   useEffect(() => {
@@ -29,38 +29,37 @@ function Home() {
         setIsLoaded(true);
       })
       .catch(error => {
-        console.log(error)
         setIsLoaded(true);
+        setUsers([]);
+        console.log(error)
         if (error.response.data != null) {
-          setError(error.response.data.message);
+          toast.error(error.response.data.message);
         } else {
-          setError(error.message);
+          toast.error(error.message);
         }
       })
   }, []);
 
   // Search 
   const [searchParam, setParam] = useState(["name"]);
-  
   async function search(name) {
 
     if (name.length < 3) {
-      return setError('Informar ao menos 3 caracteres');
+      return null;
     }
 
     await api.get(`/users?query=${name}&param=${searchParam}`)
       .then(response => {
         setUsers(response.data);
-        setError(null);
         setIsLoaded(true);
       })
       .catch(error => {
         console.log(error)
         setIsLoaded(true);
         if (error.response.data != null) {
-          setError(error.response.data.message);
+          toast.error(error.response.data.message);
         } else {
-          setError(error.message);
+          toast.error(error.message);
         }
       })
   }
@@ -78,9 +77,9 @@ function Home() {
         console.log(error)
         setIsLoaded(true);
         if (error.response.data != null) {
-          setError(error.response.data.message);
+          toast.error(error.response.data.message);
         } else {
-          setError(error.message);
+          toast.error(error.message);
         }
       })
   }
@@ -96,9 +95,9 @@ function Home() {
         console.log(error)
         setIsLoaded(true);
         if (error.response.data != null) {
-          setError(error.response.data.message);
+          toast.error(`${error.response.data.message}.`);
         } else {
-          setError(error.message);
+          toast.error(error.message);
         }
       })
   }
@@ -141,13 +140,14 @@ function Home() {
                         aria-label="Selecione">
                       <option value="name">Nome</option>
                       <option value="email">Email</option>
-                      <option value="phone">Telefone</option>
                     </select>
                 </div>
               </div>
 
-              { (hasError) 
-                  ? <div className="text-center my-5">{hasError}</div> 
+              { (users.length == 0) 
+                  ? <div className="text-center my-5">
+                      <div>Não encontramos nenhum usuário</div>
+                    </div> 
                   : <div className="row mt-4">
                       <div className="table-responsive">
                         <table className="table">
@@ -189,6 +189,8 @@ function Home() {
               }
           </div>
         </div>
+
+        <Toaster />
 
         <ModalUserCreate userCreate={userCreate} />
 

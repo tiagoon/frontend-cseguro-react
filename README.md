@@ -7,6 +7,7 @@ CRUD utilizando React.
 - axios
 - react-router-dom
 - dayjs
+- react-hot-toast
 
 #
 ## Como utilizar

@@ -9,7 +9,7 @@ function AppRoutes() {
       <Router>
          <Routes>
             <Route exact path='/' element={< Home />}></Route>
-            <Route exact path='/users/:id/edit' element={< UsersEdit />}></Route>
+            <Route path='/users/:id/edit' element={< UsersEdit />}></Route>
          </Routes>
       </Router>
    );

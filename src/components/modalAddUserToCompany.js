@@ -4,7 +4,15 @@ function ModalAddUserToCompany(props) {
 
    const [companyId, setCompanyId] = useState('');
    
+   function handleChange(e) {
+      setCompanyId(e.target.value);
+   }
+
    function onSubmit() {
+      if (companyId == '') {
+         return false;
+      }
+
       const data = {
          user_id: props.userId,
          company_id: companyId
@@ -22,9 +30,10 @@ function ModalAddUserToCompany(props) {
             </div>
             <div className="modal-body">
                <select 
-                  onChange={(e) => setCompanyId(e.target.value)} 
+                  onChange={handleChange}
                   className="form-select" 
                   aria-label="Selecione">
+                  <option defaultValue>Selecione</option>
                   {props.companies.map(({ id, company_name }) => <option value={id} key={id.toString()}>{company_name}</option>)}
                </select>
             </div>
